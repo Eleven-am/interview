@@ -1,0 +1,4 @@
+835 362 bottom-right
+1071 98 top-left
+636 292 top-left
+758 724 top-left

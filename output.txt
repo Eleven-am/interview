@@ -1,0 +1,7 @@
+655 364 bottom-right
+436 85 top-right
+286 610 bottom-right
+1143 563 top-left
+551 389 bottom-right
+824 767 top-left
+499 454 bottom-right
