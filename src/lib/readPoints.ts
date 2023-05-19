@@ -29,6 +29,10 @@ export interface Segment {
     end: Point;
 }
 
+/**
+ *  Takes an array of points and returns an array of segments
+ * @param points
+ */
 function getSegmentsFromPoints (points: Point[]): Segment[] {
     const result: Segment[] = [];
 
@@ -42,10 +46,9 @@ function getSegmentsFromPoints (points: Point[]): Segment[] {
     return result;
 }
 
-
 /**
- * Takes a string and returns multiple points as an array. Each line has multiple points.
- * @param line
+ * Takes a string and returns a line object filled with points and segments
+ * @param line - The line to parse
  */
 function getPoints (line: string): Line {
     // split by space
@@ -74,7 +77,6 @@ function getPoints (line: string): Line {
     }
 }
 
-
 /**
  *  Takes a sting to a file path and reads the file into an array of points.
  *  @param {string} path - The path to the file.
@@ -97,6 +99,11 @@ export function readPoints (path: string): Promise<Line[]> {
     });
 }
 
+/**
+ * Takes an array of labels and writes them to a file
+ * @param labels
+ * @param path
+ */
 export function writeLabels (labels: Label[], path: string) {
     const result = labels.map((label) => {
         return `${label.point.x} ${label.point.y} ${label.position}`;

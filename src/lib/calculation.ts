@@ -2,16 +2,30 @@ import { Point, Line, Label, Position, Segment } from './readPoints';
 const width = 100;
 const height = 50;
 
+/**
+ * Takes a line and returns a specific point in the line based on the ratio
+ * @param line
+ * @param ratio
+ */
 function getPointInALine (line: Line, ratio: number): Point {
     const midPointIndex = Math.floor(line.points.length * ratio);
 
     return line.points[midPointIndex];
 }
 
+/**
+ * Takes a segment and calculates the slope
+ * @param segment
+ */
 function calculateSlope (segment: Segment): number {
     return (segment.end.y - segment.start.y) / (segment.end.x - segment.start.x);
 }
 
+/**
+ * Checks if two segments intersect or touch
+ * @param segmentA
+ * @param segmentB
+ */
 function checkIfSegmentsIntersect(segmentA: Segment, segmentB: Segment) {
     // check if the segments are parallel
     const slopeA = calculateSlope(segmentA);
@@ -42,6 +56,12 @@ function checkIfSegmentsIntersect(segmentA: Segment, segmentB: Segment) {
     }
 }
 
+/**
+ * Checks if a point is in a rectangle
+ * @param lines
+ * @param corner
+ * @param anchor
+ */
 function checkIfRectangleHasAPoint (lines: Line[], corner: Point, anchor: Point) {
     //a region is a rectangle in which a point can be in or not
 
@@ -154,6 +174,12 @@ function checkIfRectangleHasAPoint (lines: Line[], corner: Point, anchor: Point)
     return false;
 }
 
+/**
+ * Checks if a rectangle intersects with a line
+ * @param lines
+ * @param corner
+ * @param anchor
+ */
 function checkIfRectangleIntersects (lines: Line[], corner: Point, anchor: Point) {
     const labelSegments: Segment[] = [
         {
@@ -215,6 +241,12 @@ function checkIfRectangleIntersects (lines: Line[], corner: Point, anchor: Point
     return false;
 }
 
+/**
+ * Checks if it is possible to place a label in a given position
+ * @param lines
+ * @param line
+ * @param candidate
+ */
 function checkIfSpaceAvailable (lines: Line[], line: Line, candidate: Point): Label | null {
     const topLeft: Point = {
         x: candidate.x - width,
@@ -283,21 +315,26 @@ function checkIfSpaceAvailable (lines: Line[], line: Line, candidate: Point): La
     return null;
 }
 
+/**
+ * Finds a possible position of a label in a line
+ * @param lines
+ * @param line
+ */
 export function findLabelPosition (lines: Line[], line: Line): Label | null {
     // perform a binary search to find the point
     let min = 0;
     let max = 1;
-    let mid = 0;
+    let mid = 0.5;
+
+    const point = getPointInALine(line, mid);
+    const label = checkIfSpaceAvailable(lines, line, point);
+
+    if (label !== null) {
+        return label;
+    }
 
     while (min < max) {
         mid = (min + max) / 2;
-        const point = getPointInALine(line, mid);
-        const label = checkIfSpaceAvailable(lines, line, point);
-
-        if (label !== null) {
-            return label;
-        }
-
         const minMid = (min + mid) / 2;
         const point2 = getPointInALine(line, minMid);
         const label2 = checkIfSpaceAvailable(lines, line, point2);
@@ -312,6 +349,26 @@ export function findLabelPosition (lines: Line[], line: Line): Label | null {
 
         if (label3 !== null) {
             return label3;
+        }
+
+        if (min !== 0) {
+            const zeroMin = min / 2;
+            const point4 = getPointInALine(line, zeroMin);
+            const label4 = checkIfSpaceAvailable(lines, line, point4);
+
+            if (label4 !== null) {
+                return label4;
+            }
+        }
+
+        if (max !== 1) {
+            const zeroMax = (max + 1) / 2;
+            const point5 = getPointInALine(line, zeroMax);
+            const label5 = checkIfSpaceAvailable(lines, line, point5);
+
+            if (label5 !== null) {
+                return label5;
+            }
         }
 
         min = minMid;

@@ -1,4 +1,5 @@
-835 362 bottom-right
+114 800 top-left
 1071 98 top-left
 636 292 top-left
+479 822 top-right
 758 724 top-left
